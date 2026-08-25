@@ -16,8 +16,8 @@
   :root{
     --bg:#f5f6f8; --bg-elevated:#ffffff; --bg-hover:#eef0f3; --border:#e2e5ea;
     --text:#0f1419; --text-muted:#6b7280;
-    --accent:#0d9488; --accent-hover:#0f766e; --accent-content:#ffffff; --accent-soft:rgba(13,148,136,0.10);
-    --success:#16a34a; --warning:#d97706; --error:#dc2626; --info:#0284c7;
+    --accent:#0f766e; --accent-hover:#115e59; --accent-content:#ffffff; --accent-soft:rgba(15,118,110,0.10);
+    --success:#16a34a; --warning:#d97706; --warning-strong:#b45309; --error:#dc2626; --info:#0284c7;
     --role-p:#d97706; --role-d:#16a34a; --role-c:#0284c7; --role-a:#dc2626;
     --shadow-sm:0 1px 2px rgba(15,20,25,0.05); --shadow-md:0 4px 16px rgba(15,20,25,0.08);
     --radius-lg:1rem; --radius-md:0.625rem;
@@ -26,7 +26,7 @@
     --bg:#0a0d12; --bg-elevated:#12161d; --bg-hover:#1a1f28; --border:#232933;
     --text:#e7ebf0; --text-muted:#8891a0;
     --accent:#2dd4bf; --accent-hover:#5eead4; --accent-content:#07211d; --accent-soft:rgba(45,212,191,0.12);
-    --success:#4ade80; --warning:#fbbf24; --error:#f87171; --info:#38bdf8;
+    --success:#4ade80; --warning:#fbbf24; --warning-strong:#fbbf24; --error:#f87171; --info:#38bdf8;
     --role-p:#fbbf24; --role-d:#4ade80; --role-c:#38bdf8; --role-a:#f87171;
     --shadow-sm:0 1px 2px rgba(0,0,0,0.3); --shadow-md:0 8px 24px rgba(0,0,0,0.45);
   }
@@ -42,6 +42,12 @@
   ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:8px; }
   ::selection{ background:var(--accent-soft); }
   .hidden{ display:none !important; }
+  button:focus-visible, input:focus-visible, select:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:0.01ms !important; animation-duration:0.01ms !important; }
+  }
 
   .app-shell{ max-width:1200px; margin:0 auto; padding:16px 16px 64px; }
   @media (min-width:1024px){ .app-shell{ padding:24px 32px 80px; } }
@@ -72,7 +78,7 @@
   .tab:hover{ color:var(--text); }
   .tab.tab-active{ background:var(--accent); color:var(--accent-content); }
 
-  .card{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+  .card{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); transition:border-color .15s, box-shadow .15s; }
 
   .hero-score{ padding:20px; text-align:center; }
   .hero-score .label{ font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
@@ -96,7 +102,7 @@
   .progress-bar{ height:100%; border-radius:99px; }
 
   .pill{ display:inline-flex; align-items:center; justify-content:center; font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:6px; color:#fff; letter-spacing:.01em; }
-  .pill-new{ display:inline-flex; align-items:center; font-size:0.6rem; font-weight:700; padding:1px 5px; border-radius:5px; border:1px solid var(--warning); color:var(--warning); margin-left:5px; }
+  .pill-new{ display:inline-flex; align-items:center; font-size:0.6rem; font-weight:700; padding:1px 5px; border-radius:5px; border:1px solid var(--warning-strong); color:var(--warning-strong); margin-left:5px; }
 
   .field{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px;
     font-size:0.9rem; color:var(--text); width:100%; outline:none; transition:.15s; }
@@ -114,6 +120,8 @@
   .btn-outline{ background:transparent; border-color:var(--border); color:var(--text); }
   .btn-outline:hover{ background:var(--bg-hover); }
   .btn-disabled{ background:var(--bg-hover); color:var(--text-muted); cursor:default; pointer-events:none; }
+  .btn:active{ transform:translateY(1px); }
+  .theme-toggle:active{ transform:scale(0.94); }
 
   .results-box{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow-md); max-height:280px; overflow-y:auto; margin-bottom:16px; }
   .result-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border); font-size:0.85rem; }
@@ -418,7 +426,7 @@ function renderListone(){
       <tbody>${rows}</tbody>
     </table>
     </div>
-    <p class="foot-note" style="padding:0 14px 14px;">${list.length>150?`Primi 150 di ${list.length} risultati — usa la ricerca per affinare.`:`${list.length} giocatori`}</p>`;
+    <p class="foot-note" style="padding:0 14px 14px;">${list.length>150?`Primi 150 di ${list.length} risultati, usa la ricerca per affinare.`:`${list.length} giocatori`}</p>`;
 }
 
 function applyThemeIcon(){
